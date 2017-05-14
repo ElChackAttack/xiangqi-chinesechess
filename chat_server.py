@@ -199,7 +199,14 @@ class Server:
                     mysend(to_sock, M_IN_GAME + rules + self.game.game_board.print_board())
                     mysend(from_sock, M_IN_GAME + rules + self.game.game_board.print_reversed_board())
                     self.game.next_turn()
-
+#"""
+#•••••••••
+#This is the working part of giving commands on the board, right after this I\
+#will write the updated version of the command functionality in order for it to\
+#be able to use the x,y(A5) coordinates to move to the desired piece (A6) to the\
+#desired coordinates A7. This means that the first x,y are the piece to move \
+#and the second x,y will be the desired location
+#•••••••••• 
                 elif self.game.func_player_to_move() == from_name:
                     print('YAY YOUR TURN')
                     if len(msg.rstrip()) > 1:
@@ -226,7 +233,6 @@ class Server:
                                             mysend(to_sock, M_IN_GAME + self.game.game_board.print_board() + '\nYour turn')
                                             mysend(from_sock, M_IN_GAME + self.game.game_board.print_reversed_board())
                                             self.game.next_turn()
-    #                                    """
                                         else:
                                             mysend(to_sock, M_IN_GAME + self.game.game_board.print_reversed_board() + '\nYour turn')
                                             mysend(from_sock, M_IN_GAME + self.game.game_board.print_board())
@@ -242,7 +248,6 @@ class Server:
                             except IndexError:
                                 pass
                                             
-#                                    """
 #                                else:
 #                                    pass
                                 
@@ -269,21 +274,107 @@ class Server:
                     print('Chatting chatting')
                     mysend(to_sock, M_IN_GAME + '[' + from_name + ']' + msg[1:])
             
-                """
-                # If it is the sender's turn
-                if  from_name == self.game.player_to_move():
-                    print('This would be Player 1\'s turn')
-                    print('Assuming this is a valid move, this will end the end the turn')
-                    mysend(to_sock, M_IN_GAME + self.game.placeholder() + 'Opponent\'s turn')
-                    self.game.next_turn()
-                elif from_name != self.game.player_to_move():
-                    print('It\'s not your turn to move!!!')
-                else:
-                    mysend(to_sock, M_IN_GAME + "[" + from_name + "]" + msg[1:])
-                    
-                    
-                    
-                """
+#                # If it is the sender's turn
+#                if  from_name == self.game.player_to_move():
+#                    print('This would be Player 1\'s turn')
+#                    print('Assuming this is a valid move, this will end the end the turn')
+#                    mysend(to_sock, M_IN_GAME + self.game.placeholder() + 'Opponent\'s turn')
+#                    self.game.next_turn()
+#                elif from_name != self.game.player_to_move():
+#                    print('It\'s not your turn to move!!!')
+#                else:
+#                    mysend(to_sock, M_IN_GAME + "[" + from_name + "]" + msg[1:])
+#                    
+#"""
+
+
+#Updating commands--> Wish me luck
+#
+#                elif self.game.func_player_to_move() == from_name:
+#                    print('YAY YOUR TURN')
+#                    if len(msg.rstrip()) > 1:
+#                        if msg[1] == 'M' and msg[2:].isalpha() == False:
+#                            try:
+#                                move = msg[2:].split()
+#                                piece_to_move = int(move[0])
+#    #                            _x_ = int(move[1][0])
+#                                KEY = move[1][0]
+#                                _x_ = letter_to_number_dict[KEY]
+#                                _y_ = int(move[1][1])
+#                                desired_loc = [_x_,_y_]
+##                                position_y, position_x = self.game.dictionary[piece_to_move].get_location()
+##                                standing_location = '{}{}'.format(letter_to_number_dict[position_y, position_x])
+##                                print(piece.move_piece(self.game.player_color[from_name], piece_to_move, desired_loc, self.game.game_board, self.game.dictionary))
+#                                if piece.move_piece(self.game.player_color[from_name], piece_to_move, desired_loc, self.game.game_board, self.game.dictionary) == True:
+#                                    mysend(to_sock, M_IN_GAME + 'Turn #{} \n'.format(self.game.turn))
+#                                    mysend(to_sock, M_IN_GAME + from_name \
+#                                       + ' moved piece ' + move[0] \
+#                                       + ' to position ' + move[1] + '\n')
+##                                    mysend(to_sock, M_IN_GAME + '{} moved piece {} from position {} to position {}'.format(from_name, move[0], standing_location, move[1]))
+#                                    if self.logged_name2sock[from_name] == from_sock:
+#                                        if self.game.func_player_to_move() == self.game.players[0]:
+#                                            mysend(to_sock, M_IN_GAME + self.game.game_board.print_board() + '\nYour turn')
+#                                            mysend(from_sock, M_IN_GAME + self.game.game_board.print_reversed_board())
+#                                            self.game.next_turn()
+#                                        else:
+#                                            mysend(to_sock, M_IN_GAME + self.game.game_board.print_reversed_board() + '\nYour turn')
+#                                            mysend(from_sock, M_IN_GAME + self.game.game_board.print_board())
+#                                            self.game.next_turn()
+#                                elif piece.move_piece(self.game.player_color[from_name] ,piece_to_move, desired_loc, self.game.game_board, self.game.dictionary) == 'END':
+#                                    mysend(to_sock, M_IN_GAME + 'You Lose.\nYou let your general die, ZZ will be disappointed in your 象棋 skills\nFeel free to stay here and chat but if you wish to return to the chat server enter: \'bye\'')
+#                                    mysend(from_sock, M_IN_GAME + 'You Win.\nFeel free to stay in this group and brag to your opponent about your win.\nGGWP')
+#                                else:
+#                                    mysend(from_sock, M_IN_GAME + (piece.move_piece(self.game.player_color[from_name], piece_to_move, desired_loc, self.game.game_board, self.game.dictionary)))
+#                                    
+#                            except KeyError:
+#                                mysend(from_sock, M_IN_GAME + 'You need to select a piece to move')
+#                            except IndexError:
+#                                pass
+#                                            
+##                                else:
+##                                    pass
+#                                
+#
+##                                    mysend(from_sock, M_IN_GAME + self.game.game_board.print_board())
+##                                self.game.next_turn()
+#
+##                            except:
+##                                pass
+#                        else:
+#                            mysend(to_sock, M_IN_GAME + '[' + from_name + ']' + msg[1:])
+#                    else:
+#                        pass
+##                    mysend(to_sock, M_IN_GAME + '[' + from_name + ']' + msg[1:])
+##                    self.game.next_turn()
+#                # Not your turn
+#                elif self.game.func_player_to_move() != from_name:
+##                    print('Please wait patiently for your turn')
+##                    mysend(to_sock, M_IN_GAME + '[' + from_name + ']' + msg[1:])
+##                    mysend(from_sock, M_IN_GAME + 'Please wait patiently for your turn.\n')
+#                    mysend(to_sock, M_IN_GAME + '[' + from_name + ']' + msg[1:])
+#                # Simple Chat
+#                else:
+#                    print('Chatting chatting')
+#                    mysend(to_sock, M_IN_GAME + '[' + from_name + ']' + msg[1:])
+#            
+#                # If it is the sender's turn
+#                if  from_name == self.game.player_to_move():
+#                    print('This would be Player 1\'s turn')
+#                    print('Assuming this is a valid move, this will end the end the turn')
+#                    mysend(to_sock, M_IN_GAME + self.game.placeholder() + 'Opponent\'s turn')
+#                    self.game.next_turn()
+#                elif from_name != self.game.player_to_move():
+#                    print('It\'s not your turn to move!!!')
+#                else:
+#                    mysend(to_sock, M_IN_GAME + "[" + from_name + "]" + msg[1:])
+
+
+
+
+
+
+
+#                Tic-Tac-Toe service
 #                if from_name == self.game.players[ self.game.current_player % 2 ] and msg[1] in ("1","2","3") and msg[2] in ("1","2","3"):
 #                    # Legal move
 #                    if self.game.update( int(msg[1])-1, int(msg[2])-1 ):
